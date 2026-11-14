@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="KidGameBiz.clsAlphaWord" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAgAAAAAAAAAAABIEAACAAAAkAAAAAQAQAAAAAA=</HashCode>
+      <FileName>clsAlphaWord.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KidGameBiz.clsImage" Collapsed="true">
+    <Position X="2" Y="0.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>ACAIEAAAAEAAAAAAICAIEASCAAAQgAAAAAAAQAQAAAA=</HashCode>
+      <FileName>clsImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KidGameBiz.clslevel" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAEEAAAQCAgAEAgIgAADAMAAAABAAgAEAAJABQA=</HashCode>
+      <FileName>clslevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KidGameBiz.clSPicName" Collapsed="true">
+    <Position X="0.5" Y="1.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAACAAAAAAAAACAGAIAAAAAAQAQAIIAAA=</HashCode>
+      <FileName>clSPicName.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KidGameBiz.clsPicSimilar" Collapsed="true">
+    <Position X="2" Y="1.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACACAAACAAAAAAAAACgEAIAAAAAAQJQAgAAAA=</HashCode>
+      <FileName>clsPicSimilar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KidGameBiz.clsProfile" Collapsed="true">
+    <Position X="3.5" Y="1.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAQAAAAAAAAEIgAAAAMAAAABACAAAAAgAAEA=</HashCode>
+      <FileName>clsProfile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="KidGameBiz.clsRandom" Collapsed="true">
+    <Position X="5" Y="1.25" Width="1.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAKACAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>clsRandom.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

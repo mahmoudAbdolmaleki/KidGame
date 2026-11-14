@@ -1,0 +1,20 @@
+﻿<Window x:Class="KidGame.InsertImage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ins_Image" Height="374" Width="461" WindowStartupLocation="CenterScreen">
+    <Window.Background>
+        <RadialGradientBrush>
+            <GradientStop Color="#FF62AA73" Offset="0" />
+            <GradientStop Color="#FFD9EFDE" Offset="1" />
+        </RadialGradientBrush>
+    </Window.Background>
+    <Grid Height="341" Width="443" >
+        <Image Name="image1" Height="80" HorizontalAlignment="Left" Margin="77,33,0,0"  Stretch="Fill" VerticalAlignment="Top" Width="80" ImageFailed="image1_ImageFailed" MouseEnter="image1_MouseEnter" MouseDown="image1_MouseDown" Visibility="Visible" />
+        <Image Name="image2" Height="80" HorizontalAlignment="Left" Margin="295,33,0,0"  Stretch="Fill" VerticalAlignment="Top" Width="80" />
+        <Button Content="تصویر 1 " Height="37" HorizontalAlignment="Left" Margin="77,193,0,0" Name="btn_SelectImag1" VerticalAlignment="Top" Width="87" Click="btn_SelectImag1_Click" Style="{StaticResource ButtonStyle2}" />
+        <Button Content="تصویر 2" Height="34" HorizontalAlignment="Left" Margin="295,196,0,0" Name="btn_SelectImag2" VerticalAlignment="Top" Width="84" Click="btn_SelectImag2_Click" Style="{StaticResource ButtonStyle2}" />
+        <Button Content="ذخیره" Height="35" HorizontalAlignment="Left" Margin="176,268,0,0" Name="btnSavePics" VerticalAlignment="Top" Width="90" Click="btnSavePics_Click" Style="{StaticResource ButtonStyle2}" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="66,145,0,0" Name="txtNamePic1" VerticalAlignment="Top" Width="107" Text="" TextAlignment="Right" />
+        <TextBox Height="23" HorizontalAlignment="Right" Margin="0,145,56,0" Name="txtNamePic2" VerticalAlignment="Top" Width="105" Text="" TextAlignment="Right" />
+    </Grid>
+</Window>
