@@ -5,10 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.IO;
-using System.Data.OleDb;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Resources;
 
 namespace KidGame
@@ -18,17 +16,28 @@ namespace KidGame
     /// </summary>
     public partial class App : Application
     {
+        private static string startupLogPath;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             try
             {
+                startupLogPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "KidGame", "startup.log");
+                Directory.CreateDirectory(Path.GetDirectoryName(startupLogPath));
+                File.WriteAllText(startupLogPath, "KidGame startup: " + DateTime.Now.ToString("O") + Environment.NewLine);
+                AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+                    Log("Unhandled exception: " + args.ExceptionObject);
                 AppDomain.CurrentDomain.AssemblyResolve += ResolveBundledAssembly;
+                Log("Assembly resolver registered.");
                 string dataRoot = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "KidGame");
                 string databaseDirectory = Path.Combine(dataRoot, "db");
                 string databasePath = Path.Combine(databaseDirectory, "dbGame.accdb");
                 Directory.CreateDirectory(databaseDirectory);
                 AppDomain.CurrentDomain.SetData("DataDirectory", dataRoot);
+                Log("Data directory: " + dataRoot);
 
                 if (!File.Exists(databasePath))
                 {
@@ -38,10 +47,14 @@ namespace KidGame
                         using (FileStream output = File.Create(databasePath))
                             database.CopyTo(output);
                     }
+                    Log("Database extracted.");
                 }
+                else
+                    Log("Database already exists.");
 
-                if (!CanOpenDatabase(databasePath))
+                if (!IsAceProviderRegistered())
                 {
+                    Log("ACE provider is not registered; starting installer.");
                     string installer = ExtractInstaller();
                     Process process = Process.Start(new ProcessStartInfo
                     {
@@ -51,20 +64,25 @@ namespace KidGame
                         Verb = "runas"
                     });
                     process.WaitForExit();
+                    Log("Installer finished with exit code " + process.ExitCode + ".");
                     if (process.ExitCode != 0 && process.ExitCode != 3010)
                         throw new InvalidOperationException("نصب موتور دیتابیس ناموفق بود. کد خطا: " + process.ExitCode);
-                    if (!CanOpenDatabase(databasePath))
+                    if (!IsAceProviderRegistered())
                         throw new InvalidOperationException("موتور Microsoft Access Database Engine نصب یا در دسترس نیست.");
                 }
+                else
+                    Log("ACE provider is registered.");
             }
             catch (Exception ex)
             {
+                Log("Startup failed: " + ex);
                 MessageBox.Show("آماده‌سازی برنامه انجام نشد:\n" + ex.Message, "KidGame",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 Shutdown(1);
                 return;
             }
 
+            Log("Starting WPF application.");
             base.OnStartup(e);
         }
 
@@ -75,7 +93,9 @@ namespace KidGame
                 return null;
             try
             {
-                return Assembly.Load(ReadEmbeddedFile(name + ".dll"));
+                Assembly result = Assembly.Load(ReadEmbeddedFile(name + ".dll"));
+                Log("Loaded bundled assembly " + name + ".dll.");
+                return result;
             }
             catch (FileNotFoundException)
             {
@@ -83,36 +103,19 @@ namespace KidGame
             }
         }
 
-        private static bool CanOpenDatabase(string databasePath)
+        internal static void Log(string message)
         {
             try
             {
-                using (OleDbConnection connection = new OleDbConnection(
-                    "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + databasePath + ";"))
-                    connection.Open();
-                return true;
+                if (!string.IsNullOrEmpty(startupLogPath))
+                    File.AppendAllText(startupLogPath, DateTime.Now.ToString("O") + " " + message + Environment.NewLine);
             }
-            catch (Exception ex)
-            {
-                // Only a missing provider should trigger the installer. Other database errors
-                // (for example a damaged file) must be reported instead of installing ACE again.
-                if (IsProviderMissing(ex))
-                    return false;
-                throw;
-            }
+            catch { }
         }
 
-        private static bool IsProviderMissing(Exception ex)
+        private static bool IsAceProviderRegistered()
         {
-            for (Exception current = ex; current != null; current = current.InnerException)
-            {
-                if (Marshal.GetHRForException(current) == unchecked((int)0x80040154))
-                    return true;
-                if (current.Message.IndexOf("provider is not registered", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                    current.Message.IndexOf("class not registered", StringComparison.OrdinalIgnoreCase) >= 0)
-                    return true;
-            }
-            return false;
+            return Type.GetTypeFromProgID("Microsoft.ACE.OLEDB.12.0", false) != null;
         }
 
         private static string ExtractInstaller()

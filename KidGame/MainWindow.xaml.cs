@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using KidGameBiz;
+using System.Threading.Tasks;
 
 
 namespace KidGame
@@ -106,11 +107,26 @@ namespace KidGame
 
 
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CmbBinding();
-           // cmbPlayer.Items.SortDescriptions = cmbPlayer.SelectedValuePath;
-            
+            App.Log("Main window displayed; loading players in background.");
+            try
+            {
+                DataTable dt = await Task.Run(() => new clsProfile().GetPlayer());
+                if (dt == null)
+                    throw new InvalidOperationException("دریافت فهرست بازیکنان انجام نشد.");
+                cmbPlayer.DataContext = dt;
+                cmbPlayer.SelectedValuePath = dt.Columns[0].ToString();
+                cmbPlayer.DisplayMemberPath = dt.Columns[1].ToString();
+                cmbPlayer.SelectedValue = 0;
+                App.Log("Player list loaded.");
+            }
+            catch (Exception ex)
+            {
+                App.Log("Player list load failed: " + ex);
+                MessageBox.Show("خواندن دیتابیس انجام نشد:\n" + ex.Message, "KidGame",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
       
